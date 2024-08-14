@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10-Second Challenge</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .timer {
+      font-size: 4rem;
+      margin: 2rem 0;
+    }
+
+    .random-number {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .result {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 2rem;
+    }
+
+    button {
+      font-size: 1.2rem;
+      padding: 0.5rem 1rem;
+      margin: 0 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>10-Second Challenge</h1>
+  <div class="random-number" id="random-number"></div>
+  <div class="timer" id="timer">10.00</div>
+  <div class="result" id="result"></div>
+  <div>
+    <button id="startButton">Start</button>
+    <button id="pauseButton">Pause</button>
+    <button id="stopButton">Reset</button>
+  </div>
+
+  <script>
+    let countdown = 10.00;
+    let intervalId;
+    let isPaused = false;
+    const timerElement = document.getElementById('timer');
+    const randomNumberElement = document.getElementById('random-number');
+    const resultElement = document.getElementById('result');
+    const startButton = document.getElementById('startButton');
+    const pauseButton = document.getElementById('pauseButton');
+    const stopButton = document.getElementById('stopButton');
+
+    function startTimer() {
+      const randomNumber = (Math.random() * 9.98) + 0.01;
+      randomNumberElement.textContent = `Random Number: ${randomNumber.toFixed(2)}`;
+
+      intervalId = setInterval(() => {
+        if (!isPaused) {
+          countdown -= 0.01;
+          timerElement.textContent = countdown.toFixed(2);
+          if (Math.abs(countdown - randomNumber) < 0.01) {
+            resultElement.textContent = 'Wow!!!';
+          } else {
+            resultElement.textContent = '...';
+          }
+          if (countdown <= 0) {
+            stopTimer();
+            alert('Time is up!');
+          }
+        }
+      }, 10);
+      startButton.disabled = true;
+      pauseButton.disabled = false;
+      stopButton.disabled = false;
+    }
+
+    function pauseTimer() {
+      if (!isPaused) {
+        isPaused = true;
+        pauseButton.textContent = 'Resume';
+      } else {
+        isPaused = false;
+        pauseButton.textContent = 'Pause';
+      }
+    }
+
+    function stopTimer() {
+      clearInterval(intervalId);
+      countdown = 10.00;
+      timerElement.textContent = countdown.toFixed(2);
+      randomNumberElement.textContent = '';
+      resultElement.textContent = '';
+      startButton.disabled = false;
+      pauseButton.disabled = true;
+      stopButton.disabled = true;
+      isPaused = false;
+      pauseButton.textContent = 'Pause';
+    }
+
+    startButton.addEventListener('click', startTimer);
+    pauseButton.addEventListener('click', pauseTimer);
+    stopButton.addEventListener('click', stopTimer);
+  </script>
+</body>
+</html>
